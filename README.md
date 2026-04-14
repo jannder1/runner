@@ -109,6 +109,15 @@ Os artefatos distribuídos devem ser assinados e verificáveis.
 
 ## 10. Referências
 
+1. **Especificações FHIR - Segurança**
+   - [Caso de Uso: Criar Assinatura](https://fhir.saude.go.gov.br/r4/seguranca/caso-de-uso-criar-assinatura.html)
+   - [Caso de Uso: Validar Assinatura](https://fhir.saude.go.gov.br/r4/seguranca/caso-de-uso-validar-assinatura.html)
+
+2. **Modelo C4 para Visualização de Arquitetura**
+   - [C4 Model](https://c4model.com/)
+   - Nível 1: [Diagrama de Contexto](./diagramas/imagens/contexto.svg)
+   - Nível 2: [Diagrama de Contêiner](./diagramas/imagens/conteineres.svg)
+
 - Boas práticas de CLI  
 - Segurança em software  
 - Swebook
