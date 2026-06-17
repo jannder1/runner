@@ -1,124 +1,65 @@
-# runner
-Repositório para construção de software de assinatura digital simulada, referente à disciplina de Integração e Implementação de Software, professor Dr. Fabio Lucena - UFG.
+# Backlog do Sistema Runner
 
-# Sistema de Assinatura Digital - Trabalho Prático
+> Este diretório contém **snapshots em markdown** das user stories do projeto.
+> A **fonte de verdade operacional** são as [GitHub Issues](../../issues).
+> Use estes arquivos apenas como referência rápida ou para exportação.
 
-## 1. Visão Geral
+## Como usar o backlog no GitHub
 
-Este documento define o trabalho prático da disciplina de Implementação e Integração do Bacharelado em Engenharia de Software (2026). O objetivo deste projeto é proporcionar aos estudantes experiência prática no desenvolvimento de um sistema de software por meio da construção de um **Sistema de Assinatura Digital**, voltado para simulação de processos de assinatura e validação de documentos digitais.
+### 1. Aplicar os labels
 
-O sistema proposto permite a integração com aplicações externas e simula operações típicas de assinatura digital, sendo útil para estudos de interoperabilidade, validação de dados e integração entre sistemas distribuídos.
+```bash
+# Instalar gh CLI: https://cli.github.com/
+gh auth login
+gh label sync -f .github/labels.yml --repo jannder1/runner
+```
 
----
+### 2. Criar as user stories
 
-## 2. Objetivo do Sistema de Assinatura Digital
+Para cada arquivo `US-*.md` deste diretório:
 
-Fornecer uma solução simplificada para simulação de assinatura e validação de documentos digitais por meio de uma interface de linha de comando (CLI), abstraindo a complexidade de configuração de ambiente e processos criptográficos reais.
+1. Abra uma nova issue no GitHub
+2. Use o template "User Story"
+3. Cole o conteúdo do arquivo
+4. Aplique o label `epic:*` correspondente
+5. Adicione o label `type:story`
+6. Adicione à milestone da sprint (Sprint 1, 2 ou 3)
 
----
+### 3. Criar as tasks técnicas
 
-## 3. Objetivos Específicos
+Para cada user story:
 
-1. Permitir que usuários realizem operações de assinatura digital sem necessidade de conhecimento técnico avançado em criptografia ou configuração de ambiente.
+1. Abra uma issue por task usando o template "Task Técnica"
+2. No campo "Vinculada à Story", adicione o número da issue da story (ex: `#42`)
+3. Aplique os labels `epic:*` e `type:task`
 
-2. Disponibilizar uma interface de linha de comando (CLI) simples e intuitiva, possibilitando a execução de comandos de assinatura e validação.
+### 4. Configurar GitHub Projects (opcional)
 
-3. Simular o comportamento de sistemas reais de assinatura digital, incluindo validação rigorosa de parâmetros de entrada.
+```bash
+# Criar projeto
+gh project create --title "Runner - Sprints 2026.1"
 
----
+# Adicionar issues ao projeto (interativo)
+gh project item-add <PROJECT_ID> --owner jannder1 --url <ISSUE_URL>
+```
 
-## 4. Escopo
+## Estrutura do Diretório
 
-### 4.1. O que ESTÁ no Escopo
+```
+04-backlog/
+├── README.md                       ← este arquivo
+├── US-CLI-01.md                    ← User Story: Invocar Assinador via CLI
+├── US-AS-01.md                     ← User Story: Simular Assinatura Digital
+├── US-INF-01.md                    ← User Story: Gerenciar Simulador
+├── US-INF-02.md                    ← User Story: Provisionar JDK
+└── US-INF-03.md                    ← User Story: Binários Multiplataforma
+```
 
-- Desenvolvimento da aplicação **assinatura** (CLI multiplataforma)  
-- Desenvolvimento da aplicação **assinador.jar** (Java)  
-- Integração entre CLI e assinador  
-- Validação rigorosa de parâmetros  
-- Simulação de criação de assinatura digital  
-- Simulação de validação de assinatura digital  
-- Tratamento de erros e exceções  
-- Desenvolvimento de testes (unitários e integração)  
-- Documentação de uso  
+## Convenções
 
-### 4.2. O que NÃO ESTÁ no Escopo
-
-- Implementação real de criptografia  
-- Integração com autoridades certificadoras (AC)  
-- Emissão de certificados digitais  
-- Armazenamento persistente de assinaturas  
-- Interface gráfica (GUI)  
-- Autenticação e autorização de usuários  
-
----
-
-## 5. Requisitos Funcionais
-
-### US-01: Executar operações via CLI
-
-Como usuário do sistema  
-Quero executar comandos de assinatura e validação via linha de comando  
-Para que eu possa utilizar o sistema de forma simples e direta  
-
-### US-02: Simular assinatura digital
-
-Como usuário  
-Quero que o sistema valide parâmetros antes de simular uma assinatura  
-Para que eu receba feedback sobre possíveis erros  
-
-### US-03: Simular validação de assinatura
-
-Como usuário  
-Quero validar uma assinatura digital simulada  
-Para que eu possa verificar sua autenticidade  
-
----
-
-## 6. Arquitetura e Integração
-
-A aplicação CLI (**assinatura**) se comunica com o **assinador.jar** por dois modos:
-
-- Modo local: execução direta via linha de comando  
-- Modo servidor: comunicação via HTTP  
-
----
-
-## 7. Entregáveis
-
-- Código-fonte da CLI  
-- Código-fonte do assinador.jar  
-- Testes unitários e de integração  
-- Documentação completa  
-- Binários multiplataforma  
-
----
-
-## 8. Considerações de Implementação
-
-- Assinaturas são simuladas (mock)  
-- Validação retorna resultados simulados  
-- Foco principal: validação de parâmetros  
-
----
-
-## 9. Segurança e Integridade
-
-Os artefatos distribuídos devem ser assinados e verificáveis.
-
----
-
-## 10. Referências
-
-1. **Especificações FHIR - Segurança**
-   - [Caso de Uso: Criar Assinatura](https://fhir.saude.go.gov.br/r4/seguranca/caso-de-uso-criar-assinatura.html)
-   - [Caso de Uso: Validar Assinatura](https://fhir.saude.go.gov.br/r4/seguranca/caso-de-uso-validar-assinatura.html)
-
-2. **Modelo C4 para Visualização de Arquitetura**
-   - [C4 Model](https://c4model.com/)
-   - Nível 1: [Diagrama de Contexto](./diagramas/imagens/contexto.svg)
-   - Nível 2: [Diagrama de Contêiner](./diagramas/imagens/conteineres.svg)
-
-- Boas práticas de CLI  
-- Segurança em software  
-- Swebook
-  
+- **IDs de User Story:** `US-{COMPONENTE}-{NÚMERO}` (ex: `US-CLI-01`)
+- **IDs de Task:** `TASK-{COMPONENTE}-{NÚMERO}` (ex: `TASK-AS-03`)
+- **Componentes:** `CLI` (CLI Runner), `AS` (Assinador), `INF` (Infraestrutura)
+- **Épicos como labels:** `epic:cli-assinador`, `epic:assinador-core`, `epic:infra-runtime`
+- **Tipos como labels:** `type:story`, `type:task`, `type:bug`, `type:docs`, `type:chore`
+- **Prioridades como labels:** `priority:high`, `priority:medium`, `priority:low`
