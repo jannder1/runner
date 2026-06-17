@@ -139,7 +139,7 @@ cd projetos/assinador-java && mvn test
 
 ## Licença
 
-[Definir licença — sugestão: MIT]
+Não sei qual
 
 ---
 
@@ -147,4 +147,4 @@ cd projetos/assinador-java && mvn test
 
 - **Disciplina:** Implementação e Integração (2026-01)
 - **Professor:** Dr. Fabio Lucena — UFG
-- **Equipe:** [lista de membros]
+- **Equipe:** @jannderson e @thamaraprata
