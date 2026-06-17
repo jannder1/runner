@@ -35,3 +35,22 @@ sha256sum -c SHA256SUMS
 
 # Windows (PowerShell)
 Get-FileHash assinatura-windows-amd64.exe -Algorithm SHA256
+
+# Exibir versão
+assinatura version
+
+# Criar assinatura simulada
+assinatura sign create --input documento.txt --cert-id cert-001
+
+# Validar assinatura simulada
+assinatura sign validate --signature "RUNNER_SIM_SIG_..."
+
+# Gerenciar Simulador HubSaúde
+assinatura simulator start
+assinatura simulator status
+assinatura simulator stop
+
+# Ajuda
+assinatura --help
+
+
