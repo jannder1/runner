@@ -1,65 +1,145 @@
-# Backlog do Sistema Runner
+[README Principal.md](https://github.com/user-attachments/files/29272421/README.Principal.md)
+# Sistema Runner
 
-> Este diretório contém **snapshots em markdown** das user stories do projeto.
-> A **fonte de verdade operacional** são as [GitHub Issues](../../issues).
-> Use estes arquivos apenas como referência rápida ou para exportação.
+> CLI multiplataforma para simulação de assinatura digital — Trabalho prático de **Implementação e Integração (2026-01)**, Bacharelado em Engenharia de Software — UFG.
+>
+> **Professor:** Dr. Fabio Lucena
 
-## Como usar o backlog no GitHub
+---
 
-### 1. Aplicar os labels
+## O que é isso?
 
-```bash
-# Instalar gh CLI: https://cli.github.com/
-gh auth login
-gh label sync -f .github/labels.yml --repo jannder1/runner
-```
+O **Sistema Runner** é uma CLI multiplataforma que abstrai a complexidade de executar aplicações Java relacionadas a assinatura digital simulada. O sistema é composto por:
 
-### 2. Criar as user stories
+- **CLI Runner** (`assinatura`): binário Go multiplataforma que o usuário final invoca
+- **Assinador** (`assinador.jar`): aplicação Java que valida parâmetros FHIR e simula operações de assinatura
 
-Para cada arquivo `US-*.md` deste diretório:
+> ⚠️ Este sistema **simula** operações de assinatura digital. Não é adequado para uso em produção com dados reais.
 
-1. Abra uma nova issue no GitHub
-2. Use o template "User Story"
-3. Cole o conteúdo do arquivo
-4. Aplique o label `epic:*` correspondente
-5. Adicione o label `type:story`
-6. Adicione à milestone da sprint (Sprint 1, 2 ou 3)
+---
 
-### 3. Criar as tasks técnicas
+## Instalação Rápida
 
-Para cada user story:
+Baixe o binário pré-compilado para sua plataforma na página de [Releases](../../releases):
 
-1. Abra uma issue por task usando o template "Task Técnica"
-2. No campo "Vinculada à Story", adicione o número da issue da story (ex: `#42`)
-3. Aplique os labels `epic:*` e `type:task`
+| Plataforma | Binário |
+|------------|---------|
+| Windows (amd64) | `assinatura-windows-amd64.exe` |
+| Linux (amd64) | `assinatura-linux-amd64` |
+| macOS (amd64) | `assinatura-darwin-amd64` |
 
-### 4. Configurar GitHub Projects (opcional)
+### Verificação de integridade
+
+Após o download, verifique o checksum SHA256:
 
 ```bash
-# Criar projeto
-gh project create --title "Runner - Sprints 2026.1"
+# Linux / macOS
+sha256sum -c SHA256SUMS
 
-# Adicionar issues ao projeto (interativo)
-gh project item-add <PROJECT_ID> --owner jannder1 --url <ISSUE_URL>
+# Windows (PowerShell)
+Get-FileHash assinatura-windows-amd64.exe -Algorithm SHA256
 ```
 
-## Estrutura do Diretório
+---
+
+## Uso Básico
+
+```bash
+# Exibir versão
+assinatura version
+
+# Criar assinatura simulada
+assinatura sign create --input documento.txt --cert-id cert-001
+
+# Validar assinatura simulada
+assinatura sign validate --signature "RUNNER_SIM_SIG_..."
+
+# Gerenciar Simulador HubSaúde
+assinatura simulator start
+assinatura simulator status
+assinatura simulator stop
+
+# Ajuda
+assinatura --help
+assinatura sign --help
+```
+
+> 💡 Na primeira execução, o sistema provisiona automaticamente o JDK necessário.
+
+---
+
+## Estrutura do Repositório
 
 ```
-04-backlog/
-├── README.md                       ← este arquivo
-├── US-CLI-01.md                    ← User Story: Invocar Assinador via CLI
-├── US-AS-01.md                     ← User Story: Simular Assinatura Digital
-├── US-INF-01.md                    ← User Story: Gerenciar Simulador
-├── US-INF-02.md                    ← User Story: Provisionar JDK
-└── US-INF-03.md                    ← User Story: Binários Multiplataforma
+runner/
+├── docs/                          # Documentação do projeto
+│   ├── 01-especificacao.md        # Especificação de requisitos
+│   ├── 02-design.md               # Arquitetura e decisões (C4)
+│   ├── 03-plano-implementacao.md  # Plano de sprints
+│   └── 04-backlog/                # Export de issues (opcional)
+├── projetos/
+│   ├── assinatura/                # CLI Runner (Go + Cobra)
+│   └── assinador-java/            # Assinador (Java 21)
+├── diagramas/                     # Diagramas C4 (SVG + fonte Mermaid)
+├── .github/
+│   ├── workflows/                 # CI/CD
+│   └── ISSUE_TEMPLATE/            # Templates de issues
+└── README.md                      # Este arquivo
 ```
 
-## Convenções
+---
 
-- **IDs de User Story:** `US-{COMPONENTE}-{NÚMERO}` (ex: `US-CLI-01`)
-- **IDs de Task:** `TASK-{COMPONENTE}-{NÚMERO}` (ex: `TASK-AS-03`)
-- **Componentes:** `CLI` (CLI Runner), `AS` (Assinador), `INF` (Infraestrutura)
-- **Épicos como labels:** `epic:cli-assinador`, `epic:assinador-core`, `epic:infra-runtime`
-- **Tipos como labels:** `type:story`, `type:task`, `type:bug`, `type:docs`, `type:chore`
-- **Prioridades como labels:** `priority:high`, `priority:medium`, `priority:low`
+## Documentação Completa
+
+- 📋 [Especificação](docs/01-especificacao.md) — requisitos, escopo, casos de uso
+- 🏗️ [Design](docs/02-design.md) — arquitetura, C4, ADRs, contratos
+- 📅 [Plano de Implementação](docs/03-plano-implementacao.md) — sprints, tasks, DoR/DoD
+- 🎯 [Diagramas C4](diagramas/) — contexto e contêineres
+
+---
+
+## Build Local (Desenvolvedores)
+
+### CLI Runner (Go)
+
+```bash
+cd projetos/assinatura
+go mod download
+go build -o bin/assinatura ./cmd/assinatura
+./bin/assinatura version
+```
+
+### Assinador (Java)
+
+```bash
+cd projetos/assinador-java
+mvn clean package
+java -jar target/assinador.jar
+```
+
+### Testes
+
+```bash
+# CLI
+cd projetos/assinatura && go test ./...
+
+# Assinador
+cd projetos/assinador-java && mvn test
+```
+
+---
+
+## Contribuindo e ajudando a gente com esse projeto 
+
+1. Crie uma issue usando os [templates disponíveis](../../issues/new/choose)
+2. Siga a [Definition of Ready e Definition of Done](docs/03-plano-implementacao.md#2-definições-de-ready-dor-e-done-dod)
+3. Use [Conventional Commits](https://www.conventionalcommits.org/) nas mensagens
+4. Abra um Pull Request linkando a issue correspondente
+
+---
+
+## Contato
+
+- **Disciplina:** Implementação e Integração (2026-01)
+- **Professor:** Dr. Fabio Lucena — UFG
+- **Equipe:** [lista de membros]
