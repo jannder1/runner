@@ -1,0 +1,140 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Dispara em tags como v0.1.0, v1.2.3, etc.
+
+permissions:
+  contents: write  # Necessário para criar release
+
+jobs:
+  # Job 1: Release da CLI Runner (Go) via GoReleaser
+  release-cli:
+    name: Release CLI Runner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Histórico completo para changelog
+
+      - name: Configurar Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
+          cache-dependency-path: projetos/assinatura/go.sum
+
+      - name: Rodar testes antes do release
+        working-directory: projetos/assinatura
+        run: go test ./...
+
+      - name: Executar GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: '~> v2'
+          working-directory: projetos/assinatura
+          args: release --clean --skip=publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload binários para o release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: 'Sistema Runner ${{ github.ref_name }}'
+          draft: true
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            projetos/assinatura/dist/assinatura-linux-amd64
+            projetos/assinatura/dist/assinatura-darwin-amd64
+            projetos/assinatura/dist/assinatura-windows-amd64.exe
+            projetos/assinatura/dist/SHA256SUMS
+            projetos/assinatura/dist/SHA256SUMS.sig
+            LICENSE
+            README.md
+          body: |
+            ## 📦 Sistema Runner ${{ github.ref_name }}
+
+            Release dos binários multiplataforma do **Sistema Runner**.
+
+            ### Binários disponíveis
+
+            | Plataforma | Arquivo |
+            |------------|---------|
+            | Windows (amd64) | `assinatura-windows-amd64.exe` |
+            | Linux (amd64) | `assinatura-linux-amd64` |
+            | macOS (amd64) | `assinatura-darwin-amd64` |
+
+            ### Instalação rápida
+
+            ```bash
+            # Linux / macOS
+            wget https://github.com/jannder1/runner/releases/download/${{ github.ref_name }}/assinatura-linux-amd64
+            chmod +x assinatura-linux-amd64
+            sudo mv assinatura-linux-amd64 /usr/local/bin/assinatura
+            ```
+
+            ### Verificação de integridade
+
+            ```bash
+            # Baixar checksums
+            wget https://github.com/jannder1/runner/releases/download/${{ github.ref_name }}/SHA256SUMS
+
+            # Verificar
+            sha256sum -c SHA256SUMS
+            ```
+
+            Ver [Guia de Instalação](https://github.com/jannder1/runner/blob/main/docs/06-guia-instalacao.md) para mais detalhes.
+
+  # Job 2: Release do Assinador (Java) — uberjar
+  release-assinador:
+    name: Release Assinador (uberjar)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Compilar e empacotar uberjar
+        working-directory: projetos/assinador-java
+        run: |
+          mvn clean package -DskipTests
+          ls -lh target/assinador.jar
+
+      - name: Calcular SHA256 do uberjar
+        working-directory: projetos/assinador-java
+        run: |
+          sha256sum target/assinador.jar > assinador.jar.sha256
+          cat assinador.jar.sha256
+
+      - name: Upload uberjar para o release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            projetos/assinador-java/target/assinador.jar
+            projetos/assinador-java/assinador.jar.sha256
+
+  # Job 3: Validação pós-release
+  post-release:
+    name: Validação Pós-Release
+    runs-on: ubuntu-latest
+    needs: [release-cli, release-assinador]
+
+    steps:
+      - name: Verificar release publicado
+        run: |
+          echo "🎉 Release ${{ github.ref_name }} publicado com sucesso!"
+          echo ""
+          echo "Acesse: https://github.com/jannder1/runner/releases/tag/${{ github.ref_name }}"

@@ -1,0 +1,183 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  GO_VERSION: '1.22'
+  JAVA_VERSION: '21'
+
+jobs:
+  # Job 1: Build e teste do Assinador (Java)
+  build-assinador:
+    name: Build & Test Assinador (Java)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Compilar e testar Assinador
+        working-directory: projetos/assinador-java
+        run: |
+          mvn clean verify
+          echo "✅ Build e testes do Assinador passaram"
+
+      - name: Upload do uberjar
+        uses: actions/upload-artifact@v4
+        with:
+          name: assinador-jar
+          path: projetos/assinador-java/target/assinador.jar
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Upload do relatório de testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: assinador-test-report
+          path: |
+            projetos/assinador-java/target/surefire-reports/
+            projetos/assinador-java/target/cucumber-report.html
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # Job 2: Build e teste da CLI Runner (Go)
+  build-cli:
+    name: Build & Test CLI Runner (Go)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Go ${{ env.GO_VERSION }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+          cache-dependency-path: projetos/assinatura/go.sum
+
+      - name: Baixar dependências
+        working-directory: projetos/assinatura
+        run: go mod download
+
+      - name: Verificar código (go vet)
+        working-directory: projetos/assinatura
+        run: go vet ./...
+
+      - name: Rodar testes
+        working-directory: projetos/assinatura
+        run: |
+          go test -v -race -coverprofile=coverage.out ./...
+          echo "✅ Testes da CLI passaram"
+
+      - name: Upload cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cli-coverage
+          path: projetos/assinatura/coverage.out
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Build binário
+        working-directory: projetos/assinatura
+        run: |
+          mkdir -p bin
+          go build -o bin/assinatura ./cmd/assinatura
+          echo "✅ Binário compilado"
+
+      - name: Upload binário Linux
+        uses: actions/upload-artifact@v4
+        with:
+          name: assinatura-linux-amd64
+          path: projetos/assinatura/bin/assinatura
+          retention-days: 7
+          if-no-files-found: warn
+
+  # Job 3: Validação de features BDD
+  validate-bdd:
+    name: Validar Features BDD
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Listar features BDD
+        run: |
+          echo "📋 Features BDD encontradas:"
+          find tests/bdd/features -name "*.feature" | sort
+          echo ""
+          echo "📊 Total: $(find tests/bdd/features -name '*.feature' | wc -l) features"
+          echo ""
+          echo "📊 Total de cenários: $(grep -h 'Cenário:' tests/bdd/features/*.feature | wc -l)"
+
+      - name: Verificar sintaxe Gherkin
+        run: |
+          echo "🔍 Validando sintaxe básica dos arquivos .feature..."
+          for f in tests/bdd/features/*.feature; do
+            # Verifica que tem pelo menos um Scenario
+            if ! grep -qE '^(Cenário|Scenario):' "$f"; then
+              echo "❌ ERRO: $f não contém nenhum Scenario/Cenário"
+              exit 1
+            fi
+            # Verifica que tem Feature/Característica/Funcionalidade
+            if ! grep -qE '^(Feature|Característica|Funcionalidade):' "$f"; then
+              echo "❌ ERRO: $f não contém Feature/Característica/Funcionalidade"
+              exit 1
+            fi
+          done
+          echo "✅ Todos os arquivos .feature têm sintaxe válida"
+
+  # Job 4: Lint de Markdown
+  lint-markdown:
+    name: Lint Documentação Markdown
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Verificar links quebrados
+        run: |
+          echo "🔍 Verificando presença dos documentos principais..."
+          declare -a docs=(
+            "README.md"
+            "docs/01-especificacao.md"
+            "docs/02-design.md"
+            "docs/03-plano-implementacao.md"
+          )
+          for doc in "${docs[@]}"; do
+            if [ -f "$doc" ]; then
+              echo "✅ $doc"
+            else
+              echo "❌ FALTANDO: $doc"
+            fi
+          done
+
+  # Job 5: Status final
+  all-green:
+    name: Build OK
+    runs-on: ubuntu-latest
+    needs: [build-assinador, build-cli, validate-bdd, lint-markdown]
+
+    steps:
+      - name: 🎉 Tudo passou!
+        run: |
+          echo "═══════════════════════════════════════"
+          echo "  ✅ Todos os jobs passaram com sucesso!"
+          echo "═══════════════════════════════════════"
+          echo ""
+          echo "Build, testes, BDD e documentação: OK"

@@ -1,0 +1,152 @@
+# Configuração do GoReleaser para o Sistema Runner
+# Documentação: https://goreleaser.com
+
+version: 2
+
+project_name: assinatura
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: assinatura
+    main: ./cmd/assinatura
+    binary: assinatura
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+    ignore:
+      - goos: windows
+        goarch: amd64
+        goarm: ''
+    flags:
+      - -trimpath
+      - -ldflags=-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+  # Build com sufixo de plataforma (caso queira manter compatibilidade com versões antigas)
+  - id: assinatura-com-sufixo
+    main: ./cmd/assinatura
+    binary: assinatura
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+    ignore:
+      - goos: windows
+        goarch: amd64
+        goarm: ''
+    flags:
+      - -trimpath
+      - -ldflags=-s -w
+    name_template: >-
+      {{ .ProjectName }}-{{ .Os }}-{{ .Arch }}
+      {{- if eq .Arch "amd64" }}
+      {{- end }}
+    file_name_template: >-
+      {{ .ProjectName }}-{{ .Os }}-{{ .Arch }}
+      {{- if .Arm }}
+      _{{ .Arm }}
+      {{- end }}
+      {{- if .IsSnapshot }}
+      -snapshot
+      {{- end }}
+
+archives:
+  - id: default
+    ids:
+      - assinatura-com-sufixo
+    formats: [tar.gz]
+    # Não incluir binários simples no archive (eles vão soltos no release)
+
+  - id: binarios-simples
+    ids:
+      - assinatura
+    formats: [binary]
+    name_template: >-
+      {{ .ProjectName }}-{{ .Os }}-{{ .Arch }}
+      {{- if eq (len .Artifacts) 1 }}
+      {{- if eq .Os "windows" }}
+      .exe
+      {{- end }}
+      {{- end }}
+
+checksum:
+  name_template: 'SHA256SUMS'
+  algorithm: sha256
+
+signs:
+  - artifacts: checksum
+    args:
+      # Descomentar quando configurar chave GPG
+      # - "--batch"
+      # - "--local-user"
+      # - "{{ .Env.GPG_FINGERPRINT }}"
+      # - "--output"
+      # - "${signature}"
+      # - "--detach-sign"
+      # - "${artifact}"
+      - "--default-key"
+      - "{{ .Env.GPG_FINGERPRINT }}"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  use: git
+  filters:
+    exclude:
+      - '^docs:'
+      - '^chore:'
+      - '^ci:'
+      - '^test:'
+  groups:
+    - title: Features
+      regexp: '^feat'
+      order: 0
+    - title: Bug Fixes
+      regexp: '^fix'
+      order: 1
+    - title: Performance
+      regexp: '^perf'
+      order: 2
+    - title: Refactoring
+      regexp: '^refactor'
+      order: 3
+    - title: Others
+      order: 999
+  format: >-
+    {{ range .Groups }}
+    ## {{ .Title }}
+    {{ range .Entries }}
+    * {{ .Subject }} ({{ .SHA }})
+    {{ end }}
+    {{ end }}
+
+release:
+  github:
+    owner: jannder1
+    name: runner
+  draft: true
+  prerelease: 'auto'
+  mode: append
+  name_template: "{{.ProjectName}}-{{.Version}}"
+
+# Metadados do binário
+meta: true
+
+# Inclusão de arquivos extras no release
+extra_files:
+  - glob: ./LICENSE*
+  - glob: ./README*
+  - glob: ./docs/05-manual-usuario.md
+  - glob: ./docs/06-guia-instalacao.md
