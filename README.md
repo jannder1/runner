@@ -142,4 +142,4 @@ cd projetos/assinador-java && mvn test
 
 - **Disciplina:** Implementação e Integração (2026-01)
 - **Professor:** Dr. Fabio Lucena — UFG
-- **Equipe:** [lista de membros]
+- **Equipe:** Thâmara e Jannderson
