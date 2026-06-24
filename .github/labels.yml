@@ -1,0 +1,85 @@
+# Configuração de Labels do GitHub
+# Aplicar com: gh label sync -f .github/labels.yml
+# Ou via script Python/Node usando a API do GitHub
+# Documentação: https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels
+
+- name: epic:cli-assinador
+  color: "0E8A16"
+  description: "Épico: CLI para invocação do Assinador"
+  description: "Épico: CLI para invocação do Assinador (assinador.jar)"
+
+- name: epic:assinador-core
+  color: "1D76DB"
+  description: "Épico: Aplicação Java assinador.jar (validação FHIR, simulação)"
+
+- name: epic:infra-runtime
+  color: "D93F0B"
+  description: "Épico: Provisionamento de JDK, ciclo de vida do Simulador, builds e releases"
+
+- name: type:epic
+  color: "7057FF"
+  description: "Tarefa de tipo épico (tema amplo de negócio)"
+
+- name: type:story
+  color: "BFD4F2"
+  description: "Tarefa de tipo user story (entrega de valor com critérios BDD)"
+
+- name: type:task
+  color: "C5DEF5"
+  description: "Tarefa de tipo task técnica (pedaço executável de código)"
+
+- name: type:bug
+  color: "EE0701"
+  description: "Defeito reportado"
+
+- name: type:docs
+  color: "0E8A16"
+  description: "Tarefa de documentação"
+
+- name: type:chore
+  color: "FBCA04"
+  description: "Tarefa operacional (CI, dependências, etc.)"
+
+- name: priority:high
+  color: "B60205"
+  description: "Alta prioridade"
+
+- name: priority:medium
+  color: "D93F0B"
+  description: "Média prioridade"
+
+- name: priority:low
+  color: "0E8A16"
+  description: "Baixa prioridade"
+
+- name: status:blocked
+  color: "000000"
+  description: "Bloqueada por dependência externa"
+
+- name: status:needs-info
+  color: "FBCA04"
+  description: "Precisa de mais informações do autor"
+
+- name: status:in-review
+  color: "5319E7"
+  description: "Em code review"
+
+- name: component:cli
+  color: "1D76DB"
+  description: "Componente: CLI Runner (Go)"
+
+- name: component:assinador
+  color: "BFD4F2"
+  description: "Componente: Assinador (Java)"
+
+- name: component:ci
+  color: "D93F0B"
+  description: "Componente: CI/CD e infraestrutura"
+
+- name: component:docs
+  color: "0E8A16"
+  description: "Componente: Documentação"
+
+- name: good-first-issue
+  color: "7057FF"
+  description: "Bom para contribuidores iniciantes"
