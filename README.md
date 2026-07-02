@@ -123,22 +123,51 @@ Solução: rode `assinatura start` para criar o registro novamente.
 
 ```
 runner/
-├── docs/                          # Documentação do projeto
-│   ├── 01-especificacao.md        # Especificação de requisitos
-│   ├── 02-design.md               # Arquitetura e decisões (C4)
-│   ├── 03-plano-implementacao.md  # Plano de sprints
-│   └── 04-backlog/                # Export de issues (opcional)
+├── LICENSE                       # Licença do projeto (MIT ou Apache-2.0)
+├── README.md                     # Este arquivo
+├── .gitignore
+├── docs/
+│   ├── README.md                 # Índice de documentação
+│   ├── 01-especificacao.md       # Especificação (referência ao upstream)
+│   ├── 02-design.md              # Design arquitetural
+│   ├── 03-plano-implementacao.md # Plano de sprints
+│   ├── 05-manual-usuario.md      # Manual do usuário
+│   ├── 06-guia-instalacao.md     # Guia de instalação
+│   ├── adr/                      # Architecture Decision Records
+│   │   ├── README.md
+│   │   ├── template.md
+│   │   └── ADR-001 ... ADR-006
+│   └── diagramas/
+│       ├── README.md
+│       ├── c4README.md
+│       ├── C1-diagrama-de-contexto.md
+│       ├── C2-diagrama-de-conteineres.md
+│       ├── C3-componentes-jar.md
+│       └── C3-componentes-da-cli-runner.md
 ├── projetos/
-│   ├── assinatura/                # CLI Runner (Go + Cobra)
-│   └── assinador-java/            # Assinador (Java 21)
-├── diagramas/                     # Diagramas C4 (SVG + fonte Mermaid)
-├── .github/
-│   ├── workflows/                 # CI/CD
-│   └── ISSUE_TEMPLATE/            # Templates de issues
-└── README.md                      # Este arquivo
+│   ├── README.md                 # Índice dos subprojetos
+│   ├── assinatura/               # CLI Runner (Go + Cobra)
+│   │   ├── cmd/                  # Subcomandos Cobra
+│   │   ├── internal/             # Pacotes internos (jar, server, config)
+│   │   ├── main.go
+│   │   └── go.mod
+│   └── assinador-java/           # Assinador (Java 21 + Spring Boot)
+│       ├── pom.xml
+│       └── src/
+│           ├── main/java/com/hubsaude/assinador/
+│           │   ├── AssinadorApplication.java
+│           │   ├── WebApplication.java
+│           │   ├── application/   # Use cases + validação
+│           │   ├── domain/        # Modelos + serviços de domínio
+│           │   ├── infrastructure/# Inatividade, JSON, config
+│           │   └── presentation/  # HTTP e CLI
+│           └── test/...
+├── diagramas/                    # Diagramas C4 (legado)
+└── .github/
+    ├── workflows/                # CI/CD (lint, build, test, release)
+    └── ISSUE_TEMPLATE/           # Templates de issues
 ```
 
----
 
 ## Documentação Completa
 
