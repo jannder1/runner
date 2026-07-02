@@ -1,0 +1,32 @@
+# ADRs — Architecture Decision Records
+
+Este diretório contém os registros de decisões arquiteturais (ADRs) do
+Sistema Runner. Cada ADR documenta **uma** decisão significativa: contexto,
+opções consideradas, decisão tomada e suas consequências.
+
+Convenções:
+
+- Numeração sequencial (`ADR-NNN-titulo-curto.md`).
+- Status: `Proposto` → `Aceito` → (opcionalmente) `Substituído por ADR-XXX`.
+- Cada ADR cabe em ~1 página.
+- Decisões são imutáveis após aceitas; mudanças geram ADR novo que referencia o anterior.
+
+> Formato inspirado em Michael Nygard (2011), adaptado ao contexto do projeto.
+
+## Índice
+
+| # | Decisão | Status | Critério do enunciado coberto |
+|---|---|---|---|
+| [ADR-001](ADR-001-porta-padrao-http.md) | Porta padrão do servidor HTTP | Aceito | E2 — porta padrão configurável |
+| [ADR-002](ADR-002-modo-servidor-como-padrao.md) | Modo servidor como default da CLI | Aceito | E2 — "modo servidor é o padrão" |
+| [ADR-003](ADR-003-descoberta-instancia-viva.md) | Descoberta de instância viva (health check real) | Aceito | E2 — "não só porta ocupada" |
+| [ADR-004](ADR-004-validacao-parametros-autoridade-unica.md) | Validação de parâmetros: autoridade única no JAR | Aceito | E3 — autoridade única no JAR |
+| [ADR-005](ADR-005-auto-shutdown-inatividade.md) | Auto-shutdown por inatividade com reinício do timer | Aceito | E2 — "timer reinicia a cada requisição" |
+| [ADR-006](ADR-006-parser-cli-cobra.md) | Parser de CLI: Cobra | Aceito | A — "parser de CLI" |
+
+## Como escrever um novo ADR
+
+1. Copie `template.md` para `ADR-NNN-titulo-curto.md`.
+2. Preencha as seções. Não omita **Consequências**.
+3. Marque como `Proposto` no PR; mude para `Aceito` após merge.
+4. Adicione a linha correspondente na tabela acima.
