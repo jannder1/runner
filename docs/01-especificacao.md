@@ -7,6 +7,7 @@
 > **Curso:** Bacharelado em Engenharia de Software
 > **Versão:** 1.0 (refatorada)
 > **Status:** Aprovada para desenvolvimento
+> Link canônico: https://github.com/kyriosdata/runner/blob/<sha>/runner.md
 
 ---
 
