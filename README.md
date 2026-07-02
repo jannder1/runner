@@ -44,8 +44,6 @@ Get-FileHash assinatura-windows-amd64.exe -Algorithm SHA256
 
 ## Uso Básico
 
-## Uso Básico
-
 O Sistema Runner tem dois modos de operação, controlados automaticamente:
 
 - **Modo servidor (padrão):** a CLI sobe (ou reusa) o `assinador.jar` em background
