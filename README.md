@@ -44,20 +44,39 @@ Get-FileHash assinatura-windows-amd64.exe -Algorithm SHA256
 
 ## Uso Básico
 
+## Uso Básico
+
+O Sistema Runner tem dois modos de operação, controlados automaticamente:
+
+- **Modo servidor (padrão):** a CLI sobe (ou reusa) o `assinador.jar` em background
+  e fala com ele via HTTP. Várias chamadas seguidas têm baixa latência.
+- **Modo local (`--local`):** a CLI invoca `java -jar assinador.jar` uma vez por
+  comando. Mais lento (cold start da JVM), mas não deixa processo em background.
+
 ```bash
-# Exibir versão
+# Versão do CLI
 assinatura version
 
-# Criar assinatura simulada
-assinatura sign create --input documento.txt --cert-id cert-001
+# Criar assinatura simulada (modo servidor se houver instância ativa)
+assinatura sign --content "meu documento"
+
+# Forçar modo local (subprocess, sem servidor)
+assinatura sign --content "meu documento" --local
 
 # Validar assinatura simulada
-assinatura sign validate --signature "RUNNER_SIM_SIG_..."
+assinatura validate --content "meu documento" --signature "RUNNER_SIM_SIG_..."
 
-# Gerenciar Simulador HubSaúde
-assinatura simulator start
-assinatura simulator status
-assinatura simulator stop
+# Subir o assinador.jar em background (idempotente — reusa instância viva)
+assinatura start
+assinatura start --port 9090
+assinatura start --port 9090 --timeout 30   # auto-shutdown após 30min sem requisições
+
+# Encerrar o servidor em background
+assinatura stop
+assinatura stop --port 9090
+
+# Atalho: start + comando + stop (uma invocação só)
+assinatura run sign --content "documento único"
 
 # Ajuda
 assinatura --help
@@ -66,7 +85,41 @@ assinatura sign --help
 
 > 💡 Na primeira execução, o sistema provisiona automaticamente o JDK necessário.
 
----
+### Onde ficam os arquivos de estado
+
+| Arquivo | Caminho | Propósito |
+|---|---|---|
+| `assinador.pid` | `~/.hubsaude/assinador.pid` | Registra PID e porta do servidor ativo. Lido por `sign`, `validate` e `stop` para descobrirem a instância. |
+| `assinador.jar` | `~/.hubsaude/assinador.jar` | Cópia local do JAR quando baixado automaticamente. |
+| `JDK` provisionado | `~/.hubsaude/jdk/` | JDK baixado na primeira execução (se necessário). |
+
+### Variáveis de ambiente
+
+| Variável | Consumida por | Efeito |
+|---|---|---|
+| `HUBSAUDE_TIMEOUT_MINUTES` | `assinador.jar` | Janela de inatividade para auto-shutdown (em minutos). Ausente ou `0` = desativado. Injetada pela CLI quando você passa `assinatura start --timeout N`. |
+
+### Códigos de saída
+
+| Código | Significado |
+|---|---|
+| `0` | Sucesso |
+| `1` | Erro genérico (CLI ou JAR) |
+| `65` (`EX_DATAERR`) | Erro de validação do usuário (entrada malformada) |
+| `70` (`EX_SOFTWARE`) | Erro interno do software |
+| `75` (`EX_TEMPFAIL`) | Falha temporária (ex.: health check falhou, JAR não subiu) |
+
+### Quando você recebe "nenhum servidor registrado"
+
+Esse erro vem de `stop`/`sign`/`validate` quando o pid file
+(`~/.hubsaude/assinador.pid`) não existe ou está corrompido. Causas comuns:
+
+1. Você nunca rodou `assinatura start`.
+2. O servidor foi encerrado por `kill -9` (não houve shutdown gracioso).
+3. Outra pessoa rodou `start` em outro usuário do sistema.
+
+Solução: rode `assinatura start` para criar o registro novamente.
+
 
 ## Estrutura do Repositório
 
