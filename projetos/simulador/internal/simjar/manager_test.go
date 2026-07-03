@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/danilo-sgalvao/runner/shared/release"
-	"github.com/danilo-sgalvao/runner/simulador/internal/config"
+	"github.com/jannder1/runner/shared/release"
+	"github.com/jannder1/runner/simulador/internal/config"
 )
 
 // isolateHome aponta ~/.hubsaude para um diretório temporário e neutraliza o

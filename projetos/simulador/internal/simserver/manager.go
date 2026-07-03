@@ -26,7 +26,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/danilo-sgalvao/runner/simulador/internal/config"
+	"github.com/jannder1/runner/simulador/internal/config"
 )
 
 // ProcessInfo descreve a instância do simulador.jar registrada pelo CLI.

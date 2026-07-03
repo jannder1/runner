@@ -7,7 +7,7 @@ package config
 import (
 	"path/filepath"
 
-	shared "github.com/danilo-sgalvao/runner/shared/config"
+	shared "github.com/jannder1/runner/shared/config"
 )
 
 // JarPath retorna o caminho do simulador.jar gerenciado (~/.hubsaude/simulador.jar).

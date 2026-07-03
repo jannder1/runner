@@ -17,8 +17,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/danilo-sgalvao/runner/shared/release"
-	"github.com/danilo-sgalvao/runner/simulador/internal/config"
+	"github.com/jannder1/runner/shared/release"
+	"github.com/jannder1/runner/simulador/internal/config"
 )
 
 // fetchRelease é um ponto de injeção para testes; em produção lê o release.json real.
