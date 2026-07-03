@@ -1,10 +1,3 @@
-
-
----
-
-## 2. `tests/bdd/features/sign_create.feature`
-
-```gherkin
 # language: pt
 # User Story: US-AS-01 — Simular Assinatura Digital com Validação de Parâmetros
 # Componente: Assinador (Java)

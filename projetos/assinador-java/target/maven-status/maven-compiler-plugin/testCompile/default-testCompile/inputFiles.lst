@@ -1,0 +1,7 @@
+/home/jannderson/runner/projetos/assinador-java/src/test/java/com/hubsaude/assinador/presentation/http/SignatureServerSmokeTest.java
+/home/jannderson/runner/projetos/assinador-java/src/test/java/com/hubsaude/assinador/FakeSignatureServiceTest.java
+/home/jannderson/runner/projetos/assinador-java/src/test/java/com/hubsaude/assinador/application/validation/RequestValidatorTest.java
+/home/jannderson/runner/projetos/assinador-java/src/test/java/com/hubsaude/assinador/application/UseCasesTest.java
+/home/jannderson/runner/projetos/assinador-java/src/test/java/com/hubsaude/assinador/infrastructure/json/JsonMapperTest.java
+/home/jannderson/runner/projetos/assinador-java/src/test/java/com/hubsaude/assinador/presentation/http/SignatureControllerTest.java
+/home/jannderson/runner/projetos/assinador-java/src/test/java/com/hubsaude/assinador/domain/service/Pkcs11SignatureServiceTest.java

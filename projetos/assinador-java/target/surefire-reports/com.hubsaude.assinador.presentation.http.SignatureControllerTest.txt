@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.hubsaude.assinador.presentation.http.SignatureControllerTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.278 s -- in com.hubsaude.assinador.presentation.http.SignatureControllerTest

@@ -129,12 +129,12 @@ jobs:
           echo "🔍 Validando sintaxe básica dos arquivos .feature..."
           for f in tests/bdd/features/*.feature; do
             # Verifica que tem pelo menos um Scenario
-            if ! grep -qE '^(Cenário|Scenario):' "$f"; then
+            if ! grep -qE '^\s*(Cenário|Scenario):' "$f"; then
               echo "❌ ERRO: $f não contém nenhum Scenario/Cenário"
               exit 1
             fi
             # Verifica que tem Feature/Característica/Funcionalidade
-            if ! grep -qE '^(Feature|Característica|Funcionalidade):' "$f"; then
+            if ! grep -qE '^\s*(Feature|Característica|Funcionalidade):' "$f"; then
               echo "❌ ERRO: $f não contém Feature/Característica/Funcionalidade"
               exit 1
             fi
