@@ -139,11 +139,11 @@ runner/
 │   │   └── ADR-001 ... ADR-006
 │   └── diagramas/
 │       ├── README.md
-│       ├── c4README.md
-│       ├── C1-diagrama-de-contexto.md
-│       ├── C2-diagrama-de-conteineres.md
-│       ├── C3-componentes-jar.md
-│       └── C3-componentes-da-cli-runner.md
+│             ├── c4
+│              ├── C1-diagrama-de-contexto.md
+│              ├── C2-diagrama-de-conteineres.md
+│              ├── C3-componentes-jar.md
+│              └── C3-componentes-da-cli-runner.md
 ├── projetos/
 │   ├── README.md                 # Índice dos subprojetos
 │   ├── assinatura/               # CLI Runner (Go + Cobra)
