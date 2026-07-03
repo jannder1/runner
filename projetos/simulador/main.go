@@ -1,6 +1,6 @@
 package main
 
-import "github.com/jannder1/simulador/cmd"
+import "github.com/jannder1/runner/simulador/cmd"
 
 func main() {
 	cmd.Execute()
