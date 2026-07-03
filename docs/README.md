@@ -139,7 +139,7 @@ cd projetos/assinador-java && mvn test
 
 ## Licença
 
-Não sei qual
+MIT
 
 ---
 
