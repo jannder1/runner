@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 env:
-  GO_VERSION: '1.22'
+  GO_VERSION: '1.26.2'
   JAVA_VERSION: '21'
 
 jobs:
@@ -95,7 +95,7 @@ jobs:
         working-directory: projetos/assinatura
         run: |
           mkdir -p bin
-          go build -o bin/assinatura ./cmd/assinatura
+          go build -o bin/assinatura .
           echo "✅ Binário compilado"
 
       - name: Upload binário Linux

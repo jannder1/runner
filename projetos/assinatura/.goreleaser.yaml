@@ -11,7 +11,7 @@ before:
 
 builds:
   - id: assinatura
-    main: ./cmd/assinatura
+    main: .
     binary: assinatura
     env:
       - CGO_ENABLED=0
@@ -31,7 +31,7 @@ builds:
 
   # Build com sufixo de plataforma (caso queira manter compatibilidade com versões antigas)
   - id: assinatura-com-sufixo
-    main: ./cmd/assinatura
+    main: .
     binary: assinatura
     env:
       - CGO_ENABLED=0
@@ -146,7 +146,7 @@ meta: true
 
 # Inclusão de arquivos extras no release
 extra_files:
-  - glob: ./LICENSE*
-  - glob: ./README*
-  - glob: ./docs/05-manual-usuario.md
-  - glob: ./docs/06-guia-instalacao.md
+  - glob: ../../LICENSE*
+  - glob: ../../README*
+  - glob: ../../docs/05-manual-usuario.md
+  - glob: ../../docs/06-guia-instalacao.md
