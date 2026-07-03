@@ -27,7 +27,7 @@ builds:
         goarm: ''
     flags:
       - -trimpath
-      - -ldflags=-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+      - -ldflags=-s -w -X main.Version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
 
   # Build com sufixo de plataforma (caso queira manter compatibilidade com versões antigas)
   - id: assinatura-com-sufixo

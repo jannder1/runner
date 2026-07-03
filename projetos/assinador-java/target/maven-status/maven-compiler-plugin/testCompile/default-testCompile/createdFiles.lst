@@ -1,8 +1,0 @@
-com/hubsaude/assinador/domain/service/Pkcs11SignatureServiceTest.class
-com/hubsaude/assinador/presentation/http/SignatureServerSmokeTest$1.class
-com/hubsaude/assinador/infrastructure/json/JsonMapperTest.class
-com/hubsaude/assinador/application/UseCasesTest.class
-com/hubsaude/assinador/presentation/http/SignatureControllerTest.class
-com/hubsaude/assinador/FakeSignatureServiceTest.class
-com/hubsaude/assinador/presentation/http/SignatureServerSmokeTest.class
-com/hubsaude/assinador/application/validation/RequestValidatorTest.class
