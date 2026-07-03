@@ -1,4 +1,4 @@
-module github.com/jannder1
+module github.com/jannder1/runner/assinatura
 
 go 1.26.2
 
