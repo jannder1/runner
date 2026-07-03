@@ -5,7 +5,6 @@
 
 - name: epic:cli-assinador
   color: "0E8A16"
-  description: "Épico: CLI para invocação do Assinador"
   description: "Épico: CLI para invocação do Assinador (assinador.jar)"
 
 - name: epic:assinador-core
