@@ -1,10 +1,4 @@
-// Package simjar localiza e obtém dinamicamente o simulador.jar (US-03.4).
-//
-// Diferente do assinador.jar (construído neste repositório), o simulador.jar é um
-// artefato externo: ele só é baixado, nunca compilado localmente. Por isso o
-// download é versionado — grava-se ~/.hubsaude/simulador.version ao baixar e
-// compara-se com a versão anunciada no release.json antes de baixar de novo, para
-// não rebaixar o que já está atualizado.
+
 package simjar
 
 import (
@@ -17,25 +11,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/danilo-sgalvao/runner/shared/release"
-	"github.com/danilo-sgalvao/runner/simulador/internal/config"
+	"github.com/jannder1/runner/shared/release"
+	"github.com/jannder1/runner/simulador/internal/config"
 )
-
-// fetchRelease é um ponto de injeção para testes; em produção lê o release.json real.
 var fetchRelease = release.Fetch
 
-// Find localiza o simulador.jar, baixando-o quando necessário.
-//
-// sourceURL, quando não vazio, sobrepõe a URL do release.json (flag --source) e
-// força o download a partir dela, ignorando o cache por versão.
-//
-// Ordem de resolução:
-//  1. Atalho: simulador.jar ao lado do executável (modo distribuído).
-//  2. --source informado → baixa dessa URL (sempre).
-//  3. release.json: se ~/.hubsaude/simulador.jar existe e simulador.version == versão
-//     remota, usa o cache; senão baixa e regrava jar + versão.
-//  4. Offline (falha ao ler release.json) com cache presente → usa o cache.
-//  5. Offline sem cache → erro claro.
+
 func Find(sourceURL string) (string, error) {
 	if exe, err := os.Executable(); err == nil {
 		jarAoLado := filepath.Join(filepath.Dir(exe), "simulador.jar")
@@ -98,10 +79,6 @@ func localVersion() string {
 	}
 	return strings.TrimSpace(string(data))
 }
-
-// download baixa o jar de url para ~/.hubsaude/simulador.jar. Se version não for
-// vazio, grava também o marcador de versão para o cache de US-03.4. Se
-// sha256Expected não for vazio, verifica a integridade do download.
 func download(url, version, sha256Expected string) error {
 	resp, err := http.Get(url) //nolint:noctx
 	if err != nil {
@@ -117,8 +94,6 @@ func download(url, version, sha256Expected string) error {
 		return err
 	}
 
-	// Grava em arquivo temporário e renomeia, para não deixar um jar parcial
-	// no destino caso o download seja interrompido.
 	tmp := dest + ".tmp"
 	out, err := os.OpenFile(tmp, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
