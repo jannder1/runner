@@ -13,9 +13,6 @@ import (
 	"github.com/jannder1/runner/simulador/internal/config"
 )
 
-// isolateHome aponta ~/.hubsaude para um diretório temporário e neutraliza o
-// atalho de "jar ao lado do executável", para que cada teste parta de um estado
-// limpo e previsível.
 func isolateHome(t *testing.T) {
 	t.Helper()
 	tmp := t.TempDir()
@@ -26,7 +23,7 @@ func isolateHome(t *testing.T) {
 	}
 }
 
-// stubRelease substitui fetchRelease durante o teste e o restaura ao fim.
+
 func stubRelease(t *testing.T, f *release.File, err error) {
 	t.Helper()
 	orig := fetchRelease
@@ -106,7 +103,7 @@ func TestFind_CacheValido(t *testing.T) {
 	writeFile(t, config.JarPath(), "jar-em-cache")
 	writeFile(t, config.VersionPath(), "1.0.0")
 
-	// Servidor que falha o teste se for acionado: cache válido não deve baixar.
+	
 	srv := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 		t.Error("não deveria baixar com cache válido")
 	}))

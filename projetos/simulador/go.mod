@@ -1,4 +1,4 @@
-module github.com/jannder1/runner/assinatura
+module github.com/jannder1/runner/simulador
 
 go 1.26.2
 
